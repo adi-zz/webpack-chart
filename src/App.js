@@ -101,6 +101,20 @@ export default class App extends Component {
     };
   }
 
+  componentDidMount() {
+    // if there's a statsJson, we assume it's a url to a stat json file, and we get it
+    const url = new URL(window.location.href);
+    const statsJson = url.searchParams.get("statsJson");
+    if (statsJson) {
+      console.log('request for:', statsJson)
+
+      const oReq = new XMLHttpRequest();
+      oReq.addEventListener("load", this.handleXHRFileLoad.bind(oReq, this.handleStats));
+      oReq.open("GET", statsJson);
+      oReq.send();
+    }
+  }
+
   render() {
     const { selectedNode, demo } = this.state;
 
@@ -126,6 +140,9 @@ export default class App extends Component {
                      onChange={this.handleSelectFile}
                      wrapperClassName='h5'
                      standalone />
+              <p>
+              or share the file online and send its URL as a GET param like <code>{this.remoteJsonSampleURL()}</code>
+              </p>
               <p>
                 Stats graph rendered with{' '}
                 <a href='https://github.com/alexkuz/cake-chart'>Cake Chart</a>.
@@ -174,10 +191,28 @@ export default class App extends Component {
   }
 
   handleFileLoad = e => {
-    const json = JSON.parse(e.target.result);
+    this.handleStats(e.target.result)
+  }
 
-    const tree = getTreeFromStats(json);
+  handleXHRFileLoad = function(handleStats){
+    console.log('in handleXHRFileLoad', this.responseText)
+    handleStats(this.responseText)
+  }
 
-    this.setState({ selectedNode: tree, tree, demo: false });
+  handleStats = stats => {
+    try {
+      const json = JSON.parse(stats);
+
+      const tree = getTreeFromStats(json);
+
+      this.setState({ selectedNode: tree, tree, demo: false });
+    } catch (error) {
+      console.error('json parse error', error.message)      
+    }
+  }
+
+  remoteJsonSampleURL = () => {
+    const l = window.location
+    return `${l.protocol}//${l.host}${l.pathname}?statsJson=[URL to stats.json]`
   }
 }
