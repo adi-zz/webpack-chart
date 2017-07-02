@@ -145,7 +145,12 @@ export default class App extends Component {
               </p>
               <p>
                 Stats graph rendered with{' '}
-                <a href='https://github.com/alexkuz/cake-chart'>Cake Chart</a>.
+                <a href='https://github.com/alexkuz/cake-chart' target='_blank'>Cake Chart</a>.
+              </p>
+              <p>
+                This is a <a href='https://github.com/adi-zz/webpack-visualizer'>fork</a> of{' '}
+                <a href='https://github.com/chrisbateman/webpack-visualizer'>webpack-visualizer</a>{' '}
+                that allows providing <a href='https://adi-zz.github.io/webpack-chart/?statsJson=https%3A%2F%2Fraw.githubusercontent.com%2Fadi-zz%2Fbuilding-products-with-js%2Fmaster%2Fclient%2Fstats.json'>json as an input via a GET param</a>.
               </p>
             </Panel>
           </Col>
